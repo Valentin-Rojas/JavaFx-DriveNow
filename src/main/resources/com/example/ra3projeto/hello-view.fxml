@@ -1,16 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.ra3projeto.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.ra3projeto.HelloController">
+    <TabPane fx:id="tabPane" layoutX="0" layoutY="0" prefWidth="900" prefHeight="600">
+        
+        <!-- TAB VEÍCULOS -->
+        <Tab fx:id="tabCadastroVeiculos" text="Cadastro Veículos" closable="false">
+            <AnchorPane>
+                <Label text="Marca:" layoutX="20" layoutY="20"/>
+                <TextField fx:id="marcaField" layoutX="80" layoutY="18" prefWidth="200"/>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+                <Label text="Modelo:" layoutX="20" layoutY="60"/>
+                <TextField fx:id="modeloField" layoutX="80" layoutY="58" prefWidth="200"/>
+
+                <Label text="Cor:" layoutX="20" layoutY="100"/>
+                <TextField fx:id="corField" layoutX="80" layoutY="98" prefWidth="200"/>
+
+                <Label text="Ano:" layoutX="20" layoutY="140"/>
+                <TextField fx:id="anoField" layoutX="80" layoutY="138" prefWidth="200"/>
+
+                <Label text="Valor/Dia:" layoutX="20" layoutY="180"/>
+                <TextField fx:id="valorDiariaField" layoutX="80" layoutY="178" prefWidth="200"/>
+
+                <Button text="Salvar Veículo" layoutX="80" layoutY="220" onAction="#salvarVeiculo"/>
+            </AnchorPane>
+        </Tab>
+        
+        <Tab fx:id="tabEditarVeiculos" text="Gerenciar Veículos" closable="false">
+            <AnchorPane>
+                <Label text="Lista de Veículos - Clique nos botões para editar ou remover:" layoutX="20" layoutY="20"/>
+                <ListView fx:id="listaVeiculos" layoutX="20" layoutY="50" prefWidth="600" prefHeight="300"/>
+            </AnchorPane>
+        </Tab>
+
+        <!-- TAB USUÁRIOS -->
+        <Tab fx:id="tabCadastroUsuarios" text="Cadastro Usuários" closable="false">
+            <AnchorPane>
+                <Label text="Nome:" layoutX="20" layoutY="20"/>
+                <TextField fx:id="nomeUsuarioField" layoutX="80" layoutY="18" prefWidth="200"/>
+
+                <Label text="Email:" layoutX="20" layoutY="60"/>
+                <TextField fx:id="emailUsuarioField" layoutX="80" layoutY="58" prefWidth="200"/>
+
+                <Label text="Telefone:" layoutX="20" layoutY="100"/>
+                <TextField fx:id="telefoneUsuarioField" layoutX="80" layoutY="98" prefWidth="200"/>
+
+                <Label text="CPF:" layoutX="20" layoutY="140"/>
+                <TextField fx:id="cpfUsuarioField" layoutX="80" layoutY="138" prefWidth="200"/>
+
+                <Button text="Salvar Usuário" layoutX="80" layoutY="180" onAction="#salvarUsuario"/>
+            </AnchorPane>
+        </Tab>
+
+        <Tab fx:id="tabGerenciarUsuarios" text="Gerenciar Usuários" closable="false">
+            <AnchorPane>
+                <Label text="Lista de Usuários - Clique nos botões para editar ou remover:" layoutX="20" layoutY="20"/>
+                <ListView fx:id="listaUsuarios" layoutX="20" layoutY="50" prefWidth="600" prefHeight="300"/>
+            </AnchorPane>
+        </Tab>
+
+        <!-- TAB PROPRIETÁRIOS -->
+        <Tab fx:id="tabCadastroProprietarios" text="Cadastro Proprietários" closable="false">
+            <AnchorPane>
+                <Label text="Nome:" layoutX="20" layoutY="20"/>
+                <TextField fx:id="nomeProprietarioField" layoutX="80" layoutY="18" prefWidth="200"/>
+
+                <Label text="Email:" layoutX="20" layoutY="60"/>
+                <TextField fx:id="emailProprietarioField" layoutX="80" layoutY="58" prefWidth="200"/>
+
+                <Label text="Telefone:" layoutX="20" layoutY="100"/>
+                <TextField fx:id="telefoneProprietarioField" layoutX="80" layoutY="98" prefWidth="200"/>
+
+                <Label text="CPF:" layoutX="20" layoutY="140"/>
+                <TextField fx:id="cpfProprietarioField" layoutX="80" layoutY="138" prefWidth="200"/>
+
+                <Label text="Endereço:" layoutX="20" layoutY="180"/>
+                <TextField fx:id="enderecoField" layoutX="80" layoutY="178" prefWidth="200"/>
+
+                <Button text="Salvar Proprietário" layoutX="80" layoutY="220" onAction="#salvarProprietario"/>
+            </AnchorPane>
+        </Tab>
+
+        <Tab fx:id="tabGerenciarProprietarios" text="Gerenciar Proprietários" closable="false">
+            <AnchorPane>
+                <Label text="Lista de Proprietários - Clique nos botões para editar ou remover:" layoutX="20" layoutY="20"/>
+                <ListView fx:id="listaProprietarios" layoutX="20" layoutY="50" prefWidth="600" prefHeight="300"/>
+            </AnchorPane>
+        </Tab>
+
+        <!-- TAB RESERVAS -->
+        <Tab fx:id="tabCadastroReservas" text="Cadastro Reservas" closable="false">
+            <AnchorPane>
+                <Label text="Código:" layoutX="20" layoutY="20"/>
+                <TextField fx:id="codigoReservaField" layoutX="100" layoutY="18" prefWidth="200"/>
+
+                <Label text="CPF Usuário:" layoutX="20" layoutY="60"/>
+                <TextField fx:id="cpfUsuarioReservaField" layoutX="100" layoutY="58" prefWidth="200"/>
+
+                <Label text="Veículo:" layoutX="20" layoutY="100"/>
+                <TextField fx:id="veiculoInfoField" layoutX="100" layoutY="98" prefWidth="200"/>
+
+                <Label text="Valor Total:" layoutX="20" layoutY="140"/>
+                <TextField fx:id="valorTotalField" layoutX="100" layoutY="138" prefWidth="200"/>
+
+                <Button text="Salvar Reserva" layoutX="100" layoutY="180" onAction="#salvarReserva"/>
+            </AnchorPane>
+        </Tab>
+
+        <Tab fx:id="tabGerenciarReservas" text="Gerenciar Reservas" closable="false">
+            <AnchorPane>
+                <Label text="Lista de Reservas - Clique nos botões para editar ou remover:" layoutX="20" layoutY="20"/>
+                <ListView fx:id="listaReservas" layoutX="20" layoutY="50" prefWidth="600" prefHeight="300"/>
+            </AnchorPane>
+        </Tab>
+        
+    </TabPane>
 </VBox>
