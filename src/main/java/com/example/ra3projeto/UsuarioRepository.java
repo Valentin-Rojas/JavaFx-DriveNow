@@ -22,7 +22,7 @@ public class UsuarioRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Usuario>) ois.readObject();
         } catch (InvalidClassException e) {
-            System.out.println("Arquivo incompatível. Deletando usuarios.ser...");
+            // System.out.println("Arquivo incompatível. Deletando usuarios.ser...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {

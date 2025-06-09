@@ -22,7 +22,7 @@ public class ReservaRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Reserva>) ois.readObject();
         } catch (InvalidClassException e) {
-            System.out.println("Arquivo incompatível. Deletando reservas.ser...");
+            // System.out.println("Arquivo incompatível. Deletando reservas.ser...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {

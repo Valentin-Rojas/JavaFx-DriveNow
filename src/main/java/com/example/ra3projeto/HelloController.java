@@ -118,6 +118,71 @@ public class HelloController {
         carregarListaUsuarios();
         carregarListaProprietarios();
         carregarListaReservas();
+        
+        // Configurar validação em tempo real
+        configurarValidacaoVeiculo();
+        configurarValidacaoUsuario();
+        configurarValidacaoProprietario();
+        configurarValidacaoReserva();
+    }
+
+    private void configurarValidacaoVeiculo() {
+        // Validação da marca
+        marcaField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Veiculo.isMarcaValida(newValue)) {
+                marcaField.setStyle("-fx-border-color: none;");
+            } else {
+                marcaField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+            }
+        });
+
+        // Validação do modelo
+        modeloField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Veiculo.isModeloValido(newValue)) {
+                modeloField.setStyle("-fx-border-color: none;");
+            } else {
+                modeloField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+            }
+        });
+
+        // Validação da cor
+        corField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Veiculo.isCorValida(newValue)) {
+                corField.setStyle("-fx-border-color: none;");
+            } else {
+                corField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+            }
+        });
+
+        // Validação do ano
+        anoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números
+            if (!newValue.matches("\\d*")) {
+                anoField.setText(oldValue);
+                return;
+            }
+            
+            if (Veiculo.isAnoValido(newValue)) {
+                anoField.setStyle("-fx-border-color: none;");
+            } else {
+                anoField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+            }
+        });
+
+        // Validação e formatação do valor da diária
+        valorDiariaField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, vírgula e ponto
+            if (!newValue.matches("[0-9]*[,.]?[0-9]*")) {
+                valorDiariaField.setText(oldValue);
+                return;
+            }
+            
+            if (Veiculo.isValorDiariaValido(newValue)) {
+                valorDiariaField.setStyle("-fx-border-color: none;");
+            } else {
+                valorDiariaField.setStyle("-fx-border-color: red; -fx-border-width: 1px;");
+            }
+        });
     }
 
     @FXML
@@ -128,40 +193,79 @@ public class HelloController {
         String anoText = anoField.getText();
         String valorText = valorDiariaField.getText();
 
-        if (!marca.isEmpty() && !modelo.isEmpty()) {
-            try {
-                int ano = anoText.isEmpty() ? 2024 : Integer.parseInt(anoText);
-                double valor = valorText.isEmpty() ? 100.0 : Double.parseDouble(valorText);
-                
-                List<Veiculo> veiculos = VeiculoRepository.carregarLista();
-
-                if (veiculoEditando != null) {
-                    for (Veiculo v : veiculos) {
-                        if (v.equals(veiculoEditando)) {
-                            v.setMarca(marca);
-                            v.setModelo(modelo);
-                            v.setCor(cor);
-                            v.setAno(ano);
-                            v.setValorDiaria(valor);
-                            break;
-                        }
-                    }
-                    veiculoEditando = null;
-                    tabPane.getSelectionModel().select(tabEditarVeiculos);
-                } else {
-                    Veiculo novo = new Veiculo(marca, modelo, cor, ano, valor);
-                    veiculos.add(novo);
-                }
-
-                VeiculoRepository.salvarLista(veiculos);
-                limparCamposVeiculo();
-                carregarLista();
-            } catch (NumberFormatException e) {
-                System.out.println("Ano e valor devem ser números válidos.");
-            }
-        } else {
-            System.out.println("Preencha pelo menos marca e modelo.");
+        // Validar todos os campos antes de salvar
+        if (!Veiculo.isMarcaValida(marca)) {
+            mostrarAlerta("Marca inválida", "Marca deve ter pelo menos 2 caracteres");
+            return;
         }
+        
+        if (!Veiculo.isModeloValido(modelo)) {
+            mostrarAlerta("Modelo inválido", "Modelo deve ter pelo menos 2 caracteres");
+            return;
+        }
+        
+        if (!Veiculo.isCorValida(cor)) {
+            mostrarAlerta("Cor inválida", "Cor deve ter pelo menos 3 caracteres");
+            return;
+        }
+        
+        if (!Veiculo.isAnoValido(anoText)) {
+            mostrarAlerta("Ano inválido", "Ano deve estar entre 1950 e " + (java.time.Year.now().getValue() + 1));
+            return;
+        }
+        
+        if (!Veiculo.isValorDiariaValido(valorText)) {
+            mostrarAlerta("Valor inválido", "Valor da diária deve ser maior que zero e menor que R$ 10.000");
+            return;
+        }
+
+        try {
+            int ano = Integer.parseInt(anoText);
+            double valor = Double.parseDouble(valorText.replace(",", "."));
+            
+            List<Veiculo> veiculos = VeiculoRepository.carregarLista();
+
+            if (veiculoEditando != null) {
+                for (Veiculo v : veiculos) {
+                    if (v.equals(veiculoEditando)) {
+                        v.setMarca(marca);
+                        v.setModelo(modelo);
+                        v.setCor(cor);
+                        v.setAno(ano);
+                        v.setValorDiaria(valor);
+                        break;
+                    }
+                }
+                veiculoEditando = null;
+                tabPane.getSelectionModel().select(tabEditarVeiculos);
+            } else {
+                Veiculo novo = new Veiculo(marca, modelo, cor, ano, valor);
+                veiculos.add(novo);
+            }
+
+            VeiculoRepository.salvarLista(veiculos);
+            limparCamposVeiculo();
+            carregarLista();
+            mostrarSucesso("Veículo salvo com sucesso!");
+        } catch (Exception e) {
+            mostrarAlerta("Erro", "Erro ao salvar veículo: " + e.getMessage());
+        }
+    }
+    
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
+    }
+    
+    private void mostrarSucesso(String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sucesso");
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 
     private void limparCamposVeiculo() {
@@ -562,5 +666,164 @@ public class HelloController {
         reservaEditando = reserva;
         tabPane.getSelectionModel().select(tabCadastroReservas);
         System.out.println("Editando: " + reserva);
+    }
+
+    private void configurarValidacaoUsuario() {
+        // Validação do nome do usuário
+        nomeUsuarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Usuario.isNomeValido(newValue)) {
+                nomeUsuarioField.setStyle("-fx-border-color: none;");
+            } else {
+                nomeUsuarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do email do usuário
+        emailUsuarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Usuario.isEmailValido(newValue)) {
+                emailUsuarioField.setStyle("-fx-border-color: none;");
+            } else {
+                emailUsuarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do telefone do usuário
+        telefoneUsuarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, parênteses, espaços e hífen
+            if (!newValue.matches("[0-9()\\s-]*")) {
+                telefoneUsuarioField.setText(oldValue);
+                return;
+            }
+            
+            if (Usuario.isTelefoneValido(newValue)) {
+                telefoneUsuarioField.setStyle("-fx-border-color: none;");
+            } else {
+                telefoneUsuarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do CPF do usuário
+        cpfUsuarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, pontos e hífen
+            if (!newValue.matches("[0-9.-]*")) {
+                cpfUsuarioField.setText(oldValue);
+                return;
+            }
+            
+            if (Usuario.isCpfValido(newValue)) {
+                cpfUsuarioField.setStyle("-fx-border-color: none;");
+            } else {
+                cpfUsuarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+    }
+
+    private void configurarValidacaoProprietario() {
+        // Validação do nome do proprietário
+        nomeProprietarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Proprietario.isNomeValido(newValue)) {
+                nomeProprietarioField.setStyle("-fx-border-color: none;");
+            } else {
+                nomeProprietarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do email do proprietário
+        emailProprietarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Proprietario.isEmailValido(newValue)) {
+                emailProprietarioField.setStyle("-fx-border-color: none;");
+            } else {
+                emailProprietarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do telefone do proprietário
+        telefoneProprietarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, parênteses, espaços e hífen
+            if (!newValue.matches("[0-9()\\s-]*")) {
+                telefoneProprietarioField.setText(oldValue);
+                return;
+            }
+            
+            if (Proprietario.isTelefoneValido(newValue)) {
+                telefoneProprietarioField.setStyle("-fx-border-color: none;");
+            } else {
+                telefoneProprietarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do CPF do proprietário
+        cpfProprietarioField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, pontos e hífen
+            if (!newValue.matches("[0-9.-]*")) {
+                cpfProprietarioField.setText(oldValue);
+                return;
+            }
+            
+            if (Proprietario.isCpfValido(newValue)) {
+                cpfProprietarioField.setStyle("-fx-border-color: none;");
+            } else {
+                cpfProprietarioField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do endereço
+        enderecoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Proprietario.isEnderecoValido(newValue)) {
+                enderecoField.setStyle("-fx-border-color: none;");
+            } else {
+                enderecoField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+    }
+
+    private void configurarValidacaoReserva() {
+        // Validação do código da reserva
+        codigoReservaField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Reserva.isCodigoValido(newValue)) {
+                codigoReservaField.setStyle("-fx-border-color: none;");
+            } else {
+                codigoReservaField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do CPF do usuário na reserva
+        cpfUsuarioReservaField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, pontos e hífen
+            if (!newValue.matches("[0-9.-]*")) {
+                cpfUsuarioReservaField.setText(oldValue);
+                return;
+            }
+            
+            if (Reserva.isCpfUsuarioValido(newValue)) {
+                cpfUsuarioReservaField.setStyle("-fx-border-color: none;");
+            } else {
+                cpfUsuarioReservaField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação da informação do veículo
+        veiculoInfoField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (Reserva.isVeiculoInfoValido(newValue)) {
+                veiculoInfoField.setStyle("-fx-border-color: none;");
+            } else {
+                veiculoInfoField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
+
+        // Validação do valor total
+        valorTotalField.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Permitir apenas números, vírgula e ponto
+            if (!newValue.matches("[0-9]*[,.]?[0-9]*")) {
+                valorTotalField.setText(oldValue);
+                return;
+            }
+            
+            if (Reserva.isValorTotalValido(newValue)) {
+                valorTotalField.setStyle("-fx-border-color: none;");
+            } else {
+                valorTotalField.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
+            }
+        });
     }
 }

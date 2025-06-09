@@ -17,14 +17,14 @@ public class VeiculoRepository {
 
     public static List<Veiculo> carregarLista() {
         File file = new File(ARQUIVO);
-        System.out.println("Existe veiculos.ser? " + file.exists());
+        // System.out.println("Existe veiculos.ser? " + file.exists());
 
         if (!file.exists()) return new ArrayList<>();
 
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Veiculo>) ois.readObject();
         } catch (InvalidClassException e) {
-            System.out.println("Arquivo incompatível. Deletando veiculos.ser...");
+            // System.out.println("Arquivo incompatível. Deletando veiculos.ser...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {

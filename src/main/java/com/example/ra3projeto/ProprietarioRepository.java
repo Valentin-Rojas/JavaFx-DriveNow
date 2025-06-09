@@ -22,7 +22,7 @@ public class ProprietarioRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Proprietario>) ois.readObject();
         } catch (InvalidClassException e) {
-            System.out.println("Arquivo incompatível. Deletando proprietarios.ser...");
+            // System.out.println("Arquivo incompatível. Deletando proprietarios.ser...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {
