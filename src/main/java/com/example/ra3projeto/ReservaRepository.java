@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservaRepository {
-    private static final String ARQUIVO = "reservas.ser";
+    private static final String ARQUIVO = "reservas.dat";
 
     public static void salvarLista(List<Reserva> lista) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO))) {
@@ -22,7 +22,7 @@ public class ReservaRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Reserva>) ois.readObject();
         } catch (InvalidClassException e) {
-            // System.out.println("Arquivo incompatível. Deletando reservas.ser...");
+            // System.out.println("Arquivo incompatível. Deletando reservas.dat...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {

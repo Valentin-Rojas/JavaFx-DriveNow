@@ -62,7 +62,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return nome + " - " + email;
+        return nome + " - " + email + " | CPF: " + cpf + " | Tel: " + telefone;
     }
 
     @Override

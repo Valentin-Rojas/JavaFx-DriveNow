@@ -18,8 +18,11 @@ public class Reserva implements Serializable {
     private String veiculoInfo; // marca + modelo
     private LocalDate dataInicio;
     private LocalDate dataFim;
+    private int diasAluguel; // Número de dias do aluguel
     private double valorTotal;
     private String status; // "Ativa", "Finalizada", "Cancelada"
+    private Usuario usuario; // Relacionamento com Usuario
+    private Veiculo veiculo; // Relacionamento com Veiculo
 
     public Reserva(String codigoReserva, String cpfUsuario, String veiculoInfo, LocalDate dataInicio, LocalDate dataFim, double valorTotal) {
         this.codigoReserva = codigoReserva;
@@ -27,7 +30,22 @@ public class Reserva implements Serializable {
         this.veiculoInfo = veiculoInfo;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
+        this.diasAluguel = calcularDias(dataInicio, dataFim);
         this.valorTotal = valorTotal;
+        this.status = "Ativa";
+    }
+
+    // Construtor com relacionamentos
+    public Reserva(String codigoReserva, Usuario usuario, Veiculo veiculo, LocalDate dataInicio, LocalDate dataFim, int diasAluguel) {
+        this.codigoReserva = codigoReserva;
+        this.usuario = usuario;
+        this.veiculo = veiculo;
+        this.cpfUsuario = usuario.getCpf(); // Manter compatibilidade
+        this.veiculoInfo = veiculo.getMarca() + " " + veiculo.getModelo(); // Manter compatibilidade
+        this.dataInicio = dataInicio;
+        this.dataFim = dataFim;
+        this.diasAluguel = diasAluguel;
+        this.valorTotal = diasAluguel * veiculo.getValorDiaria(); // Cálculo automático
         this.status = "Ativa";
     }
 
@@ -71,6 +89,14 @@ public class Reserva implements Serializable {
         this.dataFim = dataFim;
     }
 
+    public int getDiasAluguel() {
+        return diasAluguel;
+    }
+
+    public void setDiasAluguel(int diasAluguel) {
+        this.diasAluguel = diasAluguel;
+    }
+
     public double getValorTotal() {
         return valorTotal;
     }
@@ -87,9 +113,27 @@ public class Reserva implements Serializable {
         this.status = status;
     }
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
+
     @Override
     public String toString() {
-        return codigoReserva + " - " + veiculoInfo + " (" + status + ")";
+        String usuarioInfo = (usuario != null) ? usuario.getNome() : cpfUsuario;
+        String veiculoInfo = (veiculo != null) ? veiculo.getMarca() + " " + veiculo.getModelo() : this.veiculoInfo;
+        return codigoReserva + " | " + usuarioInfo + " | " + veiculoInfo + " | " + diasAluguel + " dias | R$" + String.format("%.2f", valorTotal) + " (" + status + ")";
     }
 
     @Override
@@ -121,6 +165,37 @@ public class Reserva implements Serializable {
             return valor >= 0 && valor <= 100000;
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    // Método estático para validar dias de aluguel
+    public static boolean isDiasAluguelValido(String diasText) {
+        if (diasText == null || diasText.trim().isEmpty()) return false;
+        try {
+            int dias = Integer.parseInt(diasText.trim());
+            return dias > 0 && dias <= 365; // Máximo 1 ano
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    // Método para calcular dias entre datas
+    private int calcularDias(LocalDate dataInicio, LocalDate dataFim) {
+        if (dataInicio == null || dataFim == null) return 1;
+        long dias = java.time.temporal.ChronoUnit.DAYS.between(dataInicio, dataFim);
+        return dias > 0 ? (int) dias : 1; // Mínimo 1 dia
+    }
+
+    // Método estático para gerar código de reserva automaticamente
+    public static String gerarCodigoReserva() {
+        java.time.LocalDateTime agora = java.time.LocalDateTime.now();
+        return "RES" + agora.format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
+
+    // Método para recalcular valor total baseado nos dias e valor diário do veículo
+    public void recalcularValorTotal() {
+        if (veiculo != null && diasAluguel > 0) {
+            this.valorTotal = diasAluguel * veiculo.getValorDiaria();
         }
     }
 }

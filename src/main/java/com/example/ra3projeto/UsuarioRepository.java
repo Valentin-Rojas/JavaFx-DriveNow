@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioRepository {
-    private static final String ARQUIVO = "usuarios.ser";
+    private static final String ARQUIVO = "usuarios.dat";
 
     public static void salvarLista(List<Usuario> lista) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ARQUIVO))) {
@@ -22,7 +22,7 @@ public class UsuarioRepository {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<Usuario>) ois.readObject();
         } catch (InvalidClassException e) {
-            // System.out.println("Arquivo incompatível. Deletando usuarios.ser...");
+            // System.out.println("Arquivo incompatível. Deletando usuarios.dat...");
             file.delete();
             return new ArrayList<>();
         } catch (Exception e) {
@@ -35,5 +35,29 @@ public class UsuarioRepository {
         List<Usuario> usuarios = carregarLista();
         usuarios.add(novoUsuario);
         salvarLista(usuarios);
+    }
+
+    // Verificar se CPF já existe
+    public static boolean cpfJaExiste(String cpf) {
+        List<Usuario> usuarios = carregarLista();
+        return usuarios.stream().anyMatch(u -> u.getCpf().equals(cpf));
+    }
+
+    // Verificar se telefone já existe
+    public static boolean telefoneJaExiste(String telefone) {
+        List<Usuario> usuarios = carregarLista();
+        return usuarios.stream().anyMatch(u -> u.getTelefone().equals(telefone));
+    }
+
+    // Verificar se CPF já existe (exceto para um usuário específico - para edição)
+    public static boolean cpfJaExiste(String cpf, Usuario usuarioAtual) {
+        List<Usuario> usuarios = carregarLista();
+        return usuarios.stream().anyMatch(u -> u.getCpf().equals(cpf) && !u.equals(usuarioAtual));
+    }
+
+    // Verificar se telefone já existe (exceto para um usuário específico - para edição)
+    public static boolean telefoneJaExiste(String telefone, Usuario usuarioAtual) {
+        List<Usuario> usuarios = carregarLista();
+        return usuarios.stream().anyMatch(u -> u.getTelefone().equals(telefone) && !u.equals(usuarioAtual));
     }
 }

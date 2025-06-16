@@ -18,6 +18,7 @@ public class Veiculo implements Serializable {
     private int ano;
     private double valorDiaria;
     private boolean disponivel;
+    private Proprietario proprietario; // Relacionamento com Proprietario
 
     public Veiculo(String marca, String modelo) {
         this.marca = marca;
@@ -34,6 +35,17 @@ public class Veiculo implements Serializable {
         setCor(cor);
         setAno(ano);
         setValorDiaria(valorDiaria);
+        this.disponivel = true;
+    }
+
+    // Construtor com Proprietario
+    public Veiculo(String marca, String modelo, String cor, int ano, double valorDiaria, Proprietario proprietario) {
+        setMarca(marca);
+        setModelo(modelo);
+        setCor(cor);
+        setAno(ano);
+        setValorDiaria(valorDiaria);
+        this.proprietario = proprietario;
         this.disponivel = true;
     }
 
@@ -59,6 +71,10 @@ public class Veiculo implements Serializable {
 
     public boolean isDisponivel() {
         return disponivel;
+    }
+
+    public Proprietario getProprietario() {
+        return proprietario;
     }
 
     public void setMarca(String marca) {
@@ -90,9 +106,14 @@ public class Veiculo implements Serializable {
         this.disponivel = disponivel;
     }
 
+    public void setProprietario(Proprietario proprietario) {
+        this.proprietario = proprietario;
+    }
+
     @Override
     public String toString() {
-        return marca + " " + modelo + " (" + ano + ") - R$" + valorDiaria + "/dia";
+        String proprietarioInfo = (proprietario != null) ? " | Proprietário: " + proprietario.getNome() : " | Sem proprietário";
+        return marca + " " + modelo + " (" + ano + ") - R$" + String.format("%.2f", valorDiaria) + "/dia" + proprietarioInfo;
     }
 
     @Override

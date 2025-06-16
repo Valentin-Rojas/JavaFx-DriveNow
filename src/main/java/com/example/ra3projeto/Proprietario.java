@@ -77,7 +77,7 @@ public class Proprietario implements Serializable {
 
     @Override
     public String toString() {
-        return nome + " - " + email + " (" + endereco + ")";
+        return nome + " - " + email + " | CPF: " + cpf + " | Tel: " + telefone + " | " + endereco;
     }
 
     @Override
