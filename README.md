@@ -500,8 +500,8 @@ public Reserva(String codigo, Usuario usuario, Veiculo veiculo, LocalDate inicio
 
 ## 👥 Informações do Projeto
 
-### 🎓 **Desenvolvedor**
-- **Nome**: Valentin Rojas
+### 🎓 **Desenvolvedores**
+- **Nome**: Andryus Zolet, Eduardo Ferreira, Nicolas Medeiros e Valentin Rojas
 - **GitHub**: [@Valentin-Rojas](https://github.com/Valentin-Rojas)
 - **Disciplina**: Programação Orientada a Objetos
 - **Projeto**: Sistema de Gestão de Aluguel de Veículos em JavaFX
@@ -510,7 +510,7 @@ public Reserva(String codigo, Usuario usuario, Veiculo veiculo, LocalDate inicio
 Este projeto JavaFX é uma versão desktop baseada no projeto web **DriveNow**, desenvolvido em equipe:
 - **Repositório Web**: [AndryusZolet/DriveNow](https://github.com/AndryusZolet/DriveNow)
 - **Tecnologias Web**: PHP, MySQL, HTML, CSS, JavaScript
-- **Equipe Web**: Andryus Zolet, Eduardo Ferreira, Leonardo Henrique, Nicolas Medeiros
+- **Equipe Web**: Andryus Zolet, Eduardo Ferreira, Leonardo Henrique, Nicolas Medeiros e Valentin Rojas
 
 ### 📜 **Licença Acadêmica**
 Este projeto foi desenvolvido exclusivamente para fins educacionais como parte do aprendizado de **Programação Orientada a Objetos**. O código é aberto para consulta e aprendizado.
@@ -536,4 +536,4 @@ Este projeto foi desenvolvido exclusivamente para fins educacionais como parte d
 ![JavaFX](https://img.shields.io/badge/JavaFX-17.0.2-orange?style=for-the-badge)
 ![POO](https://img.shields.io/badge/POO-4%20Pilares-purple?style=for-the-badge)
 
-**Projeto Acadêmico Desenvolvido em**: Janeiro 2025
+**Projeto Acadêmico Desenvolvido no 4 período**: - Primeiro semestre de 2025 (2025/1)
