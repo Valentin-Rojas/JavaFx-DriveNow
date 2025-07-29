@@ -159,12 +159,12 @@ public static boolean isAnoValido(String ano);
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
-        <version>17.0.2</version>
+        <version>21.0.7</version>
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-fxml</artifactId>
-        <version>17.0.2</version>
+        <version>21.0.7</version>
     </dependency>
     <dependency>
         <groupId>org.kordamp.ikonli</groupId>
