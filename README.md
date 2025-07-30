@@ -148,7 +148,7 @@ public static boolean isAnoValido(String ano);
 ## 🛠️ Tecnologias Utilizadas
 
 ### ⚙️ **Core Technologies**
-- **Java 17+**: Linguagem de programação principal
+- **Java 21.0.7+**: Linguagem de programação principal
 - **JavaFX**: Framework para interface gráfica desktop
 - **Maven**: Gerenciamento de dependências e build
 - **CSS**: Estilização customizada da interface
