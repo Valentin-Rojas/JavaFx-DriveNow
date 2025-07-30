@@ -181,7 +181,7 @@ public static boolean isAnoValido(String ano);
 
 ### 📋 Pré-requisitos
 
-- **Java JDK 17+** instalado
+- **Java JDK 21.0.7+** instalado
 - **Maven 3.6+** instalado  
 - **IDE** recomendada: IntelliJ IDEA, Eclipse ou VS Code
 
