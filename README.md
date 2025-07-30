@@ -502,7 +502,7 @@ public Reserva(String codigo, Usuario usuario, Veiculo veiculo, LocalDate inicio
 
 ### 🎓 **Desenvolvedores**
 - **Nome**: Andryus Zolet, Eduardo Ferreira, Nicolas Medeiros e Valentin Rojas
-- **GitHub**: [@Valentin-Rojas](https://github.com/Valentin-Rojas)
+- **GitHub**: [@Andryus Zolet](https://github.com/AndryusZolet), [@Nicolas Medeiros](https://github.com/Nicolas-Medeiros), [@Valentin-Rojas](https://github.com/Valentin-Rojas)
 - **Disciplina**: Programação Orientada a Objetos
 - **Projeto**: Sistema de Gestão de Aluguel de Veículos em JavaFX
 
